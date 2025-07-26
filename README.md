@@ -1,111 +1,141 @@
+You've provided an excellent `README.md` already\! It's clear, well-structured, and covers all the essential aspects of your project. The use of headings, code blocks, and clear instructions makes it very user-friendly.
+
+I've made a few minor tweaks to enhance readability and ensure consistency, but the core structure and content remain the same as your excellent original.
+
 -----
 
-# 🚀 AI-Powered SAP Ticket Classifier
+# 🚀 AI-Powered SAP Ticket Classifier (FastAPI + Retrainable Model)
 
-This project leverages a deep learning model to automatically classify SAP support tickets. By analyzing the **subject** and **content** of a ticket, it predicts two crucial fields:
+This project leverages **deep learning** and **FastAPI** to classify SAP support tickets in real time. Given a ticket's **subject** and **content**, it predicts:
 
-  * **Module**: e.g., SD, MM, HCM, FICO
-  * **Request Type**: e.g., Incident, Service Request, CR Modification
+  * 📂 **Module**: (e.g., SD, MM, HCM, FICO)
+  * 📝 **Request Type**: (e.g., Incident, Service Request, CR Modification)
 
 -----
 
 ## 📁 Project Structure
 
 ```
-📁 AiModel/
-├── ai_ticket_classifier.py # Main script for training and prediction
-├── ticket_data.csv         # Training data file
-└── README.md               # Project documentation
+AiModel/
+├── ticket_data.csv          # Training dataset
+├── train_models.py          # Script to retrain and save models
+├── main.py                  # FastAPI backend for real-time prediction
+├── tokenizer.json           # Tokenizer file (auto-generated)
+├── module_model.h5          # Module prediction model (auto-generated)
+├── request_type_model.h5    # Request type model (auto-generated)
+└── README.md                # You're reading it 🙂
 ```
 
 -----
 
 ## 🛠️ Installation
 
-Ensure you have **Python 3.10+** installed.
+Ensure **Python 3.10+** is installed.
 
-Install the necessary Python packages using pip:
-
-```bash
-pip install pandas scikit-learn tensorflow
-```
-
------
-
-## 📊 Input Dataset (`ticket_data.csv`)
-
-The `ticket_data.csv` file serves as the training data and must contain at least these four columns:
-
-| `subject`                  | `content`                                   | `module` | `request_type`  |
-| :------------------------- | :------------------------------------------ | :------- | :-------------- |
-| INC-12345 PRICE ISSUE      | We are unable to update pricing condition... | SD       | Incident        |
-| CR-009 Custom Report       | We need a new report for Material Movement... | MM       | CR Modification |
-
-You can add more rows to this file to enhance the model's training accuracy.
-
------
-
-## ▶️ How to Run
-
-### Train the Model
-
-Run the training step initially or whenever you update the `ticket_data.csv` file. This will train the model and save it.
+Install the necessary dependencies:
 
 ```bash
-python ai_ticket_classifier.py
-```
-
-### Predict a New Ticket
-
-To test the model with new input, modify the `ai_ticket_classifier.py` script by updating the `test_subject` and `test_content` variables within the prediction section:
-
-```python
-test_subject = "Employee Master Data Not Syncing"
-test_content = """
-Employee details entered in PA30 are not reflecting in the ESS portal.
-The issue started after last weekend's maintenance activity.
-"""
-
-module, req_type = predict(test_subject, test_content)
-print("Predicted Module:", module)
-print("Predicted Request Type:", req_type)
-```
-
-#### Sample Output:
-
-```
-Predicted Module: HCM
-Predicted Request Type: Incident
+pip install pandas scikit-learn tensorflow fastapi uvicorn
 ```
 
 -----
 
-## 🧠 Model Overview
+## 📊 Dataset Format
 
-The system employs a **Tokenizer** for text preprocessing, which then feeds the sequence into a **Keras neural network**.
+The `ticket_data.csv` file must include these columns:
 
-The project uses two distinct models:
+| subject         | content                               | module | request\_type   |
+| :-------------- | :------------------------------------ | :----- | :-------------- |
+| Login Issue     | Users can't access ESS after update   | HCM    | Incident        |
+| Price Problem   | Issue with pricing condition in order | SD     | Service Request |
 
-  * `module_model.h5`: Predicts the SAP module.
-  * `request_type_model.h5`: Predicts the ticket request type.
-
------
-
-## 💡 Common Errors
-
-  * **`ValueError` during `train_test_split`**: This usually indicates your dataset is too small. Add more rows to `ticket_data.csv`.
-  * **Tokenizer error**: Ensure you have run the training step (by executing `python ai_ticket_classifier.py`) before attempting to use the prediction functionality.
+Make sure your dataset has enough examples for each class to ensure robust model performance.
 
 -----
 
-## 🌱 Future Enhancements
+## 🏋️‍♂️ Step 1: Retrain the Models
 
-  * **Improved NLP Accuracy**: Explore replacing the current feedforward neural network with more advanced models like **BERT** or **LSTM** for better natural language processing.
-  * **Real-time Predictions**: Deploy the model using frameworks like **Flask** or **FastAPI** to enable real-time predictions.
-  * **User Interface**: Develop a simple web UI using technologies such as **React** or **Streamlit** for easier interaction.
+Run the following command to train both models and generate the required files:
+
+```bash
+python train_models.py
+```
+
+> ✅ This process will generate the following files in the `AiModel/` directory:
+>
+>   * `tokenizer.json`
+>   * `module_model.h5`
+>   * `request_type_model.h5`
+
+-----
+
+## 🚀 Step 2: Start FastAPI Server
+
+Run the API server using Uvicorn:
+
+```bash
+python -m uvicorn main:app --reload
+uvicorn main:app --reload
+```
+
+The server will start at:
+
+```
+http://127.0.0.1:8000
+```
+
+-----
+
+## 🔍 Sample Prediction Request
+
+### Endpoint
+
+```
+POST /predict
+```
+
+### JSON Body
+
+```json
+{
+  "subject": "INC-90001 ESS Login Issue",
+  "content": "Employees are unable to login to the ESS portal since morning."
+}
+```
+
+### Response
+
+```json
+{
+  "module": "HCM",
+  "request_type": "Incident"
+}
+```
+
+-----
+
+## 💡 Important Notes
+
+  * Always re-run `train_models.py` if you update your `ticket_data.csv` to ensure your models are trained on the latest data.
+  * The current models utilize a simple LSTM-based architecture for text classification.
+  * The `tokenizer.json` file is crucial and must correspond to the vocabulary used during the training phase.
+
+-----
+
+## 🌱 Future Ideas
+
+  * Integrate more advanced NLP models like **BERT** or **DistilBERT** for improved classification accuracy.
+  * Develop a user interface using frameworks such as **Streamlit** or **React** for a more interactive experience.
+  * Implement centralized storage for models and tokenizers (e.g., **AWS S3** or a **database**) to facilitate easier deployment and management.
 
 -----
 
 ## 👨‍💻 Author
 
-Suraj Vishwakarma
+**Suraj Vishwakarma**
+
+-----
+
+## 📬 Feedback
+
+Your input is valuable\! Feel free to suggest improvements or raise issues if you have ideas for new features or enhancements.

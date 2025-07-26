@@ -9,3 +9,23 @@ Payroll posting issue,PY posting error in PCP0 for July,HCM,Incident
 System performance issue,System too slow after patching,BASIS,Incident
 Tax not calculating correctly,Output tax not applied in billing doc,FICO,Incident
 Leave not updated in ESS,Leave applied not reflecting in employee portal,SF,Service Request
+PA30 Employee Update Issue,Employee changes not reflected in portal,HCM,Incident
+Portal Login Issue,ESS portal login fails for all users,HCM,Incident
+Condition Record Issue,Unable to update pricing in VA01,SD,Incident
+GL Account missing,GL 400000 not found during posting in FB50,FICO,Incident
+ESS Timesheet not submitting,Error on submission screen for Timesheet,ESS,Incident
+Transport request import failed,Authorization error while importing TR in STMS,BASIS,TR Movement
+New custom field in MIRO,Request to add invoice due date in MIRO screen,FICO,CR Modification
+Purchase order approval stuck,PO approval not triggered to next level,MM,Incident
+New wage type in IT0008,Add housing allowance wage type in PA30,HCM,CR Modification
+VA01 screen dump,Short dump while creating Sales Order,SD,Incident
+Tax code missing in ME21N,User can't find tax code dropdown in ME21N screen,MM,Incident
+ESS login timeout,ESS users logged out within 1 minute of login,SF,Service Request
+Update layout in MB51,Change default layout for Material Document List,MM,Service Request
+Cost center assignment issue,Cost center not defaulting in FB60,FICO,Incident
+Request for Z report,Need custom report for Open POs by vendor,MM,CR Modification
+WF not triggering for leave,Leave request stuck in 'Pending' state in ESS portal,SF,Incident
+Missing number range,Error NR751 during sales document creation,SD,Incident
+Profit center missing,Profit center not defaulted in FB60,FICO,Incident
+Add field to ME21N screen,Request to add GSTIN field in ME21N,MM,CR Modification
+Change Sales Org logic,Need enhancement in user exit for Sales Org derivation,SD,CR Modification
