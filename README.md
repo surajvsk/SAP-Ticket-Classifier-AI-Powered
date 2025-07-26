@@ -108,4 +108,4 @@ The project uses two distinct models:
 
 ## 👨‍💻 Author
 
-Dynamite Technology
+Suraj Vishwakarma
