@@ -130,6 +130,16 @@ POST /predict
 
 -----
 
+-----
+curl --location 'http://127.0.0.1:8000/predict' \
+--header 'Content-Type: application/json' \
+--data '{
+  "subject": "New Employee ID Creation Request",
+  "content": "Please create a new employee ID for Mr. Ramesh Kumar who joined on 25 July. The employee should be assigned to cost center 2023 and location Mumbai."
+}'
+-----
+
+
 ## 👨‍💻 Author
 
 **Suraj Vishwakarma**
