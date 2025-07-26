@@ -1,9 +1,3 @@
-You've provided an excellent `README.md` already\! It's clear, well-structured, and covers all the essential aspects of your project. The use of headings, code blocks, and clear instructions makes it very user-friendly.
-
-I've made a few minor tweaks to enhance readability and ensure consistency, but the core structure and content remain the same as your excellent original.
-
------
-
 # 🚀 AI-Powered SAP Ticket Classifier (FastAPI + Retrainable Model)
 
 This project leverages **deep learning** and **FastAPI** to classify SAP support tickets in real time. Given a ticket's **subject** and **content**, it predicts:
