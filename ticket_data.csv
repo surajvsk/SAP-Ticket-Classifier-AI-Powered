@@ -1,0 +1,11 @@
+﻿subject,content,module_label,request_type
+Unable to post invoice,FICO error while posting through MIRO,FICO,Incident
+Salary not reflecting,Employee's salary is not showing in payroll results,HCM,Incident
+Transport request not moving,Error in STMS during TR movement,BASIS,TR Movement
+Vendor master data update needed,Need new field in XK01 for GST,MM,CR Modification
+Pricing error in sales order,Condition type PR00 missing in SO,SD,Incident
+Material stock mismatch,Discrepancy in stock shown in MB52 and MMBE,MM,Incident
+Payroll posting issue,PY posting error in PCP0 for July,HCM,Incident
+System performance issue,System too slow after patching,BASIS,Incident
+Tax not calculating correctly,Output tax not applied in billing doc,FICO,Incident
+Leave not updated in ESS,Leave applied not reflecting in employee portal,SF,Service Request
