@@ -1,47 +1,65 @@
-# 🚀 SAP Ticket Classifier (AI-Powered)
+-----
 
-This project uses a deep learning model to automatically classify SAP support tickets based on their **subject** and **content**. It predicts two key fields:
+# 🚀 AI-Powered SAP Ticket Classifier
 
-- 🔧 **Module**: e.g., SD, MM, HCM, FICO
-- 📝 **Request Type**: e.g., Incident, Service Request, CR Modification
+This project leverages a deep learning model to automatically classify SAP support tickets. By analyzing the **subject** and **content** of a ticket, it predicts two crucial fields:
 
----
+  * **Module**: e.g., SD, MM, HCM, FICO
+  * **Request Type**: e.g., Incident, Service Request, CR Modification
 
-## 📁 Files in the Project
+-----
 
+## 📁 Project Structure
+
+```
 📁 AiModel/
-├── ai_ticket_classifier.py # Main training + prediction script
-├── ticket_data.csv # Training data file
-└── README.md # Documentation
+├── ai_ticket_classifier.py # Main script for training and prediction
+├── ticket_data.csv         # Training data file
+└── README.md               # Project documentation
+```
 
----
+-----
 
 ## 🛠️ Installation
 
-Make sure Python 3.10+ is installed.
+Ensure you have **Python 3.10+** installed.
 
-Install required Python packages:
+Install the necessary Python packages using pip:
 
 ```bash
 pip install pandas scikit-learn tensorflow
-📊 Input Dataset (ticket_data.csv)
-The file should contain at least these four columns:
+```
 
-subject	content	module	request_type
-INC-12345 PRICE ISSUE	We are unable to update pricing condition...	SD	Incident
-CR-009 Custom Report	We need a new report for Material Movement...	MM	CR Modification
+-----
 
-You can add more rows to improve training accuracy.
+## 📊 Input Dataset (`ticket_data.csv`)
 
-▶️ How to Run
-Train the model (first time or when data is updated):
+The `ticket_data.csv` file serves as the training data and must contain at least these four columns:
 
+| `subject`                  | `content`                                   | `module` | `request_type`  |
+| :------------------------- | :------------------------------------------ | :------- | :-------------- |
+| INC-12345 PRICE ISSUE      | We are unable to update pricing condition... | SD       | Incident        |
+| CR-009 Custom Report       | We need a new report for Material Movement... | MM       | CR Modification |
+
+You can add more rows to this file to enhance the model's training accuracy.
+
+-----
+
+## ▶️ How to Run
+
+### Train the Model
+
+Run the training step initially or whenever you update the `ticket_data.csv` file. This will train the model and save it.
+
+```bash
 python ai_ticket_classifier.py
-Predict a new ticket
+```
 
-Inside the same script (ai_ticket_classifier.py), modify this section to test new input:
+### Predict a New Ticket
 
+To test the model with new input, modify the `ai_ticket_classifier.py` script by updating the `test_subject` and `test_content` variables within the prediction section:
 
+```python
 test_subject = "Employee Master Data Not Syncing"
 test_content = """
 Employee details entered in PA30 are not reflecting in the ESS portal.
@@ -51,33 +69,43 @@ The issue started after last weekend's maintenance activity.
 module, req_type = predict(test_subject, test_content)
 print("Predicted Module:", module)
 print("Predicted Request Type:", req_type)
-Sample Output:
+```
 
+#### Sample Output:
 
+```
 Predicted Module: HCM
 Predicted Request Type: Incident
-🧠 Model Overview
-Uses Tokenizer to preprocess text input.
+```
 
-Feeds the sequence into a Keras neural network.
+-----
 
-Two models:
+## 🧠 Model Overview
 
-module_model.h5 – predicts SAP module
+The system employs a **Tokenizer** for text preprocessing, which then feeds the sequence into a **Keras neural network**.
 
-request_type_model.h5 – predicts ticket type
+The project uses two distinct models:
 
-💡 Common Errors
-ValueError during train_test_split: Your dataset is too small. Add more rows.
+  * `module_model.h5`: Predicts the SAP module.
+  * `request_type_model.h5`: Predicts the ticket request type.
 
-Tokenizer error: Run the training step before using prediction.
+-----
 
-🌱 Future Scope
-Replace feedforward NN with BERT or LSTM for better NLP accuracy.
+## 💡 Common Errors
 
-Deploy using Flask / FastAPI for real-time predictions.
+  * **`ValueError` during `train_test_split`**: This usually indicates your dataset is too small. Add more rows to `ticket_data.csv`.
+  * **Tokenizer error**: Ensure you have run the training step (by executing `python ai_ticket_classifier.py`) before attempting to use the prediction functionality.
 
-Add a simple web UI using React or Streamlit.
+-----
 
-👨‍💻 Author
-Name: Dynamite Technology
+## 🌱 Future Enhancements
+
+  * **Improved NLP Accuracy**: Explore replacing the current feedforward neural network with more advanced models like **BERT** or **LSTM** for better natural language processing.
+  * **Real-time Predictions**: Deploy the model using frameworks like **Flask** or **FastAPI** to enable real-time predictions.
+  * **User Interface**: Develop a simple web UI using technologies such as **React** or **Streamlit** for easier interaction.
+
+-----
+
+## 👨‍💻 Author
+
+Dynamite Technology
