@@ -70,6 +70,10 @@ Run the API server using Uvicorn:
 ```bash
 python -m uvicorn main:app --reload
 uvicorn main:app --reload
+
+pip install streamlit
+streamlit run dashboard.py
+python -m streamlit run dashboard.py
 ```
 
 The server will start at:

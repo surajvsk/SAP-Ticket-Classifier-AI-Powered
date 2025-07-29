@@ -12,6 +12,8 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding, LSTM, Dense
 from sklearn.model_selection import train_test_split
 
+
+
 # ===================== SETUP ======================
 
 app = FastAPI()
@@ -81,6 +83,19 @@ model.fit(
     batch_size=8
 )
 
+
+# === 5. Add Simple Summary Function ===
+
+def generate_summary(text: str, max_sentences: int = 2) -> str:
+    """
+    Naive extractive summary: Picks first N meaningful sentences.
+    """
+    # Break into sentences using simple punctuation (can use nltk for better accuracy)
+    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+    sentences = [s.strip() for s in sentences if len(s.strip()) > 10]
+    return ' '.join(sentences[:max_sentences])
+
+
 # ===================== FASTAPI ======================
 
 class TicketInput(BaseModel):
@@ -101,15 +116,21 @@ def predict(input_data: TicketInput):
     top_modules = [{"label": id_to_module[i], "probability": float(mod_pred[0][i])} for i in top_mod_indices]
     top_requests = [{"label": id_to_request[i], "probability": float(req_pred[0][i])} for i in top_req_indices]
 
+    # Generate summary from original input
+    full_text = input_data.subject + " " + input_data.content
+    summary = generate_summary(full_text)
+
     return {
         "subject": input_data.subject,
         "content": input_data.content[:150],
         "top_modules": top_modules,
         "top_request_types": top_requests,
         "predicted_module": top_modules[0]["label"],
-        "predicted_request_type": top_requests[0]["label"]
+        "predicted_request_type": top_requests[0]["label"],
+        "summery": summary
     }
 
+    
 # Optional to run locally with: python main.py
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
