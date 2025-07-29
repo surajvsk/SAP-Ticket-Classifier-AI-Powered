@@ -20,7 +20,7 @@ id_to_request = {idx: label for label, idx in request_to_id.items()}
 
 # === 2. Load CSV ===
 
-df = pd.read_csv("ticket_data.csv")  # Must contain: subject, content, module_label, request_type
+df = pd.read_csv("ticket_data.csv")  # Ensure file has: subject, content, module_label, request_type
 
 # === 3. Combine and Clean Text ===
 
@@ -38,6 +38,7 @@ df['text'] = df['text'].apply(clean_text)
 df['module_label_enc'] = df['module_label'].map(module_to_id)
 df['request_type_enc'] = df['request_type'].map(request_to_id)
 
+# Drop rows with missing labels (just in case)
 df.dropna(subset=['module_label_enc', 'request_type_enc'], inplace=True)
 
 # === 5. Tokenize and Pad Sequences ===
@@ -58,7 +59,7 @@ X_train, X_test, y_mod_train, y_mod_test, y_req_train, y_req_test = train_test_s
     random_state=42
 )
 
-# === 7. Build Model ===
+# === 7. Model ===
 
 input_layer = Input(shape=(300,))
 embedding = Embedding(input_dim=10000, output_dim=64)(input_layer)
@@ -77,7 +78,7 @@ model.compile(
 
 model.summary()
 
-# === 8. Train Model ===
+# === 8. Train ===
 
 model.fit(
     X_train,
@@ -93,34 +94,18 @@ results = model.evaluate(X_test, {'module_output': y_mod_test, 'request_output':
 print(f"\nModule Accuracy: {results[3]*100:.2f}%")
 print(f"Request Type Accuracy: {results[4]*100:.2f}%")
 
-# === 10. Prediction with Summary ===
+# === 10. Prediction Function ===
 
-def predict_with_summary(subject, content):
+def predict(subject, content):
     text = clean_text(subject + " " + content)
     seq = tokenizer.texts_to_sequences([text])
     pad_seq = pad_sequences(seq, maxlen=300, padding='post')
     mod_pred, req_pred = model.predict(pad_seq)
 
-    top_mod_indices = mod_pred[0].argsort()[-3:][::-1]
-    top_req_indices = req_pred[0].argsort()[-3:][::-1]
-
-    top_mods = [(id_to_module[i], float(mod_pred[0][i])) for i in top_mod_indices]
-    top_reqs = [(id_to_request[i], float(req_pred[0][i])) for i in top_req_indices]
-
-    # Summary Print
-    print("\n=== Prediction Summary ===")
-    print("Subject:", subject)
-    print("Content:", content[:150], "...")
-
-    print("\nTop 3 Predicted Modules:")
-    for label, prob in top_mods:
-        print(f"  - {label}: {prob*100:.2f}%")
-
-    print("\nTop 3 Predicted Request Types:")
-    for label, prob in top_reqs:
-        print(f"  - {label}: {prob*100:.2f}%")
-
-    return top_mods[0][0], top_reqs[0][0]
+    mod_label = id_to_module[mod_pred.argmax()]
+    req_label = id_to_request[req_pred.argmax()]
+    
+    return mod_label, req_label
 
 # === 11. Example Test ===
 
@@ -130,4 +115,6 @@ Please create a new employee ID for Mr. Ramesh Kumar who joined on 25th July.
 The employee should be assigned to cost center 2023 and location Mumbai.
 """
 
-module, req_type = predict_with_summary(test_subject, test_content)
+module, req_type = predict(test_subject, test_content)
+print("\nPredicted Module:", module)
+print("Predicted Request Type:", req_type)
